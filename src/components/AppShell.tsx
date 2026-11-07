@@ -10,6 +10,7 @@ import {
   Package,
   Users,
   Tags,
+  CircleUser,
   LogOut,
   Menu,
   X,
@@ -47,17 +48,25 @@ function navPara(rol: Rol): NavItem[] {
     match: (p) => p === "/productos/nuevo",
   };
 
+  const cuenta: NavItem = {
+    href: "/cuenta",
+    label: "Mi cuenta",
+    icon: CircleUser,
+    match: (p) => p === "/cuenta",
+  };
+
   if (rol === "administrador") {
     return [
       inicio,
       productos,
       nuevo,
-      { href: "#", label: "Usuarios (próximamente)", icon: Users, match: () => false, disabled: true },
+      { href: "/admin/usuarios", label: "Usuarios", icon: Users, match: (p) => p.startsWith("/admin/usuarios") },
       { href: "#", label: "Catálogos (próximamente)", icon: Tags, match: () => false, disabled: true },
+      cuenta,
     ];
   }
-  if (rol === "operador") return [inicio, productos, nuevo];
-  return [inicio, productos];
+  if (rol === "operador") return [inicio, productos, nuevo, cuenta];
+  return [inicio, productos, cuenta];
 }
 
 export default function AppShell({
