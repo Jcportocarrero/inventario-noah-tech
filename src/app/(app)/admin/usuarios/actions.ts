@@ -16,7 +16,7 @@ import {
 const SIN_PERMISO: Resultado = { ok: false, error: "No tienes permiso para realizar esta acción." };
 const SIN_LLAVE: Resultado = {
   ok: false,
-  error: "Falta configurar SUPABASE_SERVICE_ROLE_KEY en el servidor (archivo .env.local).",
+  error: "Falta configurar la variable SUPABASE_SERVICE_ROLE_KEY en el servidor (Vercel > Settings > Environment Variables).",
 };
 
 // Toda accion verifica en el servidor que quien llama es un administrador activo.
@@ -148,7 +148,7 @@ export async function actualizarUsuario(input: EdicionUsuario): Promise<Resultad
   if (cambioActivo) {
     const auth = clienteAuth();
     if (!auth) {
-      aviso = "Usuario actualizado, pero no se pudo bloquear la cuenta en Auth (falta SUPABASE_SERVICE_ROLE_KEY).";
+      aviso = "Usuario actualizado, pero no se pudo bloquear la cuenta en Auth (falta la variable SUPABASE_SERVICE_ROLE_KEY).";
     } else {
       const { error: errBan } = await auth.auth.admin.updateUserById(input.id, {
         ban_duration: activo ? "none" : "876000h",
