@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { PackagePlus, Search } from "lucide-react";
 import { getSession } from "@/lib/auth";
-import { KPIS } from "@/lib/kpis";
 import type { KpisRow, MovimientoReciente, StockCategoria } from "@/lib/types";
 import PageHeader from "@/components/PageHeader";
-import KpiCard from "@/components/KpiCard";
 import StockBars from "@/components/StockBars";
 import MovimientosLista from "@/components/MovimientosLista";
 
@@ -23,18 +21,6 @@ export default async function AdminPage() {
   const stock = (stockRes.data ?? []) as StockCategoria[];
   const movimientos = (movRes.data ?? []) as MovimientoReciente[];
   const stockBajo = stock.filter((s) => s.stock_bajo).length;
-
-  const valores: Record<string, number | null> = {
-    tiempo_registro: kpis?.tiempo_registro_prom_seg ?? null,
-    tiempo_busqueda: kpis?.tiempo_busqueda_prom_seg ?? null,
-    exactitud: kpis?.exactitud_pct ?? null,
-    errores: null,
-    trazabilidad: kpis?.trazabilidad_pct ?? null,
-  };
-  const detalles: Record<string, string | undefined> = {
-    tiempo_registro: kpis ? `${kpis.n_registros} altas medidas` : undefined,
-    tiempo_busqueda: kpis ? `${kpis.n_busquedas} búsquedas medidas` : undefined,
-  };
 
   return (
     <div>
@@ -65,13 +51,6 @@ export default async function AdminPage() {
         <ResumenCard titulo="Disponibles" valor={kpis?.total_disponibles ?? 0} />
         <ResumenCard titulo="Categorías con stock bajo" valor={stockBajo} alerta={stockBajo > 0} />
         <ResumenCard titulo="Mediciones de tiempo" valor={(kpis?.n_registros ?? 0) + (kpis?.n_busquedas ?? 0)} />
-      </section>
-
-      <h2 className="mb-3 mt-8 text-lg font-semibold text-slate-900">KPIs del proyecto</h2>
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {KPIS.map((def) => (
-          <KpiCard key={def.key} def={def} valor={valores[def.key]} detalle={detalles[def.key]} />
-        ))}
       </section>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-2">
